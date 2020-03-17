@@ -37,6 +37,9 @@
 <li><a href="#CSharp_director_caveats">Director caveats</a>
 </ul>
 <li><a href="#CSharp_multiple_modules">Multiple modules</a>
+<ul>
+<li><a href="#CSharp_csnamespaced">Namespaced types</a>
+</ul>
 <li><a href="#CSharp_argdef">Named arguments</a>
 <li><a href="#CSharp_typemap_examples">C# Typemap examples</a>
 <ul>
@@ -1812,7 +1815,29 @@ if you don't want users to easily stumble upon these so called 'internal working
 </p>
 
 
+<H3><a name="CSharp_csnamespaced">23.7.1 Namespaced types</a></H3>
+
+<p>
+  If you're using a multiple module setup, and you cross reference a type.  Meaning you reference a type in one dll, from a separate dll, you'll want to refer to this type with its full namespaced name.  For this purpose, the feature "cs:namespace" has been added:
+</p>
+
+<div class="code">
+  <pre>
+    %feature("cs:namespace") Full::CPP::Namespace::TypeName "Csharp.Namespace"
+    %feature("cs:namespace") std::vector&lt;Full::CPP::Namespace::TypeName&gt; "Csharp.Namespace"
+  </pre>
+</div>
+
+<p>
+  With that, "TypeName" will be referenced as "Csharp.Namespace.TypeName" and if you have templated that std::vector to "TypeNameList" then "TypeNameList" will be referenced as "Csharp.Namespace.TypeNameList".
+</p>
+
+<p>
+  It is not necessary to do this with every type.  Only those types which you reference from another namespace/module in your own bindings.
+</p>
+
 <H2><a name="CSharp_argdef">23.8 C# Named arguments</a></H2>
+
 
 <p>
   In C++ you can specify default arguments for functions, methods, and constructors.  C# offers named arguments.  This feature, specific to csharp, lets you bind default argument functions with default arguments in C#.  You can also add default arguments to functions which don't have default arguments.

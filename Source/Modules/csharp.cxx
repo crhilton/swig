@@ -200,14 +200,22 @@ public:
                  return NULL;
 	     }
 	   }
-	   if (nspace) {
-	     if (namespce)
-	       proxyname = NewStringf("%s.%s.%s", namespce, nspace, symname);
-	     else
-	       proxyname = NewStringf("%s.%s", nspace, symname);
-	   } else {
-	     proxyname = Copy(symname);
-	   }
+           String *csnspace = Getattr(n, "feature:cs:namespace");
+           if(csnspace)
+           {
+               proxyname = NewStringf("%s.%s", csnspace, symname);
+           }
+           else
+           {
+	     if (nspace) {
+	       if (namespce)
+	         proxyname = NewStringf("%s.%s.%s", namespce, nspace, symname);
+	       else
+	         proxyname = NewStringf("%s.%s", nspace, symname);
+	     } else {
+	       proxyname = Copy(symname);
+	     }
+           }
 	   Setattr(n, "proxyname", proxyname);
 	   Delete(proxyname);
 	   Delete(symname);
@@ -3412,15 +3420,23 @@ public:
 	    enumname = NewStringf("%s.%s", proxyname, symname);
 	  } else {
 	    // global enum or enum in a namespace
-	    String *nspace = Getattr(n, "sym:nspace");
-	    if (nspace) {
-	      if (namespce)
-		enumname = NewStringf("%s.%s.%s", namespce, nspace, symname);
-	      else
-		enumname = NewStringf("%s.%s", nspace, symname);
-	    } else {
-	      enumname = Copy(symname);
-	    }
+            String *csnspace = Getattr(n, "feature:cs:namespace");
+            if(csnspace)
+            {
+                enumname = NewStringf("%s.%s", csnspace, symname);
+            }
+            else
+            {
+	      String *nspace = Getattr(n, "sym:nspace");
+	      if (nspace) {
+	        if (namespce)
+	          enumname = NewStringf("%s.%s.%s", namespce, nspace, symname);
+	        else
+	          enumname = NewStringf("%s.%s", nspace, symname);
+	      } else {
+	        enumname = Copy(symname);
+	      }
+            }
 	  }
 	  Setattr(n, "enumname", enumname);
 	  Delete(enumname);
